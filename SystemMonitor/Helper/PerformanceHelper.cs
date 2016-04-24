@@ -33,7 +33,7 @@ namespace SystemMonitor.Helper
 
             // will always start at 0
             dynamic firstValue = cpuCounter.NextValue();
-            //System.Threading.Thread.Sleep(300);
+            System.Threading.Thread.Sleep(300);
             // now matches task manager reading
             dynamic secondValue = cpuCounter.NextValue();
 

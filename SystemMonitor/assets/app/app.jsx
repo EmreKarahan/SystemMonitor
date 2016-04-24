@@ -20,16 +20,20 @@ class App extends React.Component {
 
     receiveData(data) {
 
-        this.setState({ data: data });
+        var tmp = eval(data);
+        console.log(tmp);
 
+        this.setState({ data: tmp });
     }
 
     renderChartItem(item) {
-        return (<GoogleDonutChart graphName={"Cpu_" + item.Core} data={item} height="120" key={item.Core } Core={item.Core} />);
+        return (
+    <GoogleDonutChart graphName={"Cpu_" + item.Core} data={item} height="120" key={item.Core} Core={item.Core } />
+                      );
     }
 
     render() {
-        return (<div>
+        return (<div className="row">
             {(this.state.data).map((result, index) => {
                 return this.renderChartItem(result, index);
             })}
@@ -42,98 +46,37 @@ class App extends React.Component {
 class GoogleDonutChart extends React.Component {
     constructor(props) {
         super(props);
-
-        var self = this;
-        this.data = [];
-        this.data.push(props.data);
-        this.state = { data: this.changeData(this.data) };
-
-
-        this.options = {
-            series: {
-                shadowSize: 1
-            },
-            lines: {
-                show: true,
-                lineWidth: 0.5,
-                fill: true,
-                fillColor: {
-                    colors: [{
-                        opacity: 0.1
-                    }, {
-                        opacity: 1
-                    }]
-                }
-            },
-            yaxis: {
-                min: 0,
-                max: 100,
-                tickColor: "#eee",
-                tickFormatter: function (v) {
-                    return v + "%";
-                }
-            },
-            xaxis: {
-                show: false,
-            },
-            colors: ["#6ef146"],
-            grid: {
-                tickColor: "#eee",
-                borderWidth: 0
-            }
-        };
-
-        this.plot = null;
-        //this.updateInterval = 30;
-
-
+        this.state = { data: props.data };
     }
 
     render() {
-        let divStyle = {
-            height: '260px',
-            width: '480px'
-        }
-        return (<div>Core: {this.props.Core}<div className="chart" ref={this.props.graphName} id={this.props.graphName} style={divStyle }></div></div>);
+        var progressStyle = {
+            width: this.state.data.Usage + '%'
+        };
+        return (<div className="col-lg-3 col-sm-4">
+                <div><a className="text-success">Core {this.props.Core} Usage: {this.state.data.Usage}%</a></div>
+    <div>
+                <div className="progress">
+    <div className="progress-bar progress-bar-success" role="progressbar" aria-valuenow={this.state.data.Usage} aria-valuemin="0" aria-valuemax="100" style={progressStyle}>
+               
+    </div>
+                </div>
+    </div>
+
+        </div>);
     }
     componentWillReceiveProps(nextProps) {
-
-        this.data.push(nextProps.data);
-        this.setState({ data: this.changeData(this.data) });
-        
-        
-        //this.forceUpdate();
-        //this.update();
+        this.setState({ data: nextProps.data });
     }
     componentDidMount() {
-        this.plot = $.plot($("#" + this.props.graphName), [this.state.data], this.options);
+
     }
     componentDidUpdate() {
-        this.update();
-        this.forceUpdate();
+
 
     }
 
-    changeData() {
-        var tempData = [];
-        this.data.forEach(function (d, i) {
-            var item = [
-                i, d.Usage
-            ];
-            tempData.push(item);
-        });
-        return tempData;
-    }
-
-    update() {
-   
-        this.plot.setData([this.state.data]);
-        this.plot.draw();
-        console.log("Update Core : " + this.props.Core);
-        console.log(this.state.data);
-    }
 }
-
 
 ReactDOM.render(
     <App />,

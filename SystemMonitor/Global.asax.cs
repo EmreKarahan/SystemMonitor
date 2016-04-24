@@ -22,6 +22,7 @@ namespace SystemMonitor
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
             HostingEnvironment.RegisterObject(new TimerHelper());
+            HostingEnvironment.RegisterObject(new RedisSubscribeHelper());
         }
     }
 }
