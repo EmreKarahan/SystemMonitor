@@ -22,3 +22,10 @@ select,
 textarea {
     max-width: 280px;
 }
+
+.bars, .chart, .pie {
+    overflow: hidden;
+    height: 300px;
+    width: 100%;
+    font-size: 14px;
+}
